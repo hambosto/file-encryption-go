@@ -17,17 +17,15 @@ type EncryptionService struct {
 
 // NewEncryptionService creates a new instance of EncryptionService
 func NewEncryptionService(reader *bufio.Reader) *EncryptionService {
-	return &EncryptionService{reader: reader}
+	return &EncryptionService{reader: bufio.NewReader(reader)}
 }
 
 // promptInput prompts the user for input with the given message
 func (es *EncryptionService) promptInput(message string) (string, error) {
 	fmt.Print(message)
-	input, err := es.reader.ReadString('\n')
-	if err != nil {
-		return "", err
-	}
-	return strings.TrimSpace(input), nil
+	var input string
+	_, err := fmt.Fscanln(es.reader, &input)
+	return input, err
 }
 
 // EncryptFile handles the encryption process
